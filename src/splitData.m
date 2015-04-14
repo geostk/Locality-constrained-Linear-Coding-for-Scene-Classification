@@ -32,6 +32,4 @@ for i = 1 : cate_num
     test_pos = test_pos + size(cate_data,1)-train_size;
 end
 
-train_instance = sparse(train_instance);
-test_instance = sparse(test_instance);
 end
