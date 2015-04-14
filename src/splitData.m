@@ -17,7 +17,7 @@ test_instance = [];
 train_pos = 0;
 test_pos = 0;
 for i = 1 : cate_num
-    cate_data = data{1};
+    cate_data = data{i};
     if i == cate
         train_label(train_pos+1: train_pos+train_size) = 1;
         test_label = [test_label; ones(size(cate_data,1)-train_size,1)];
