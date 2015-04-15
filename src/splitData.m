@@ -7,12 +7,13 @@ function [train_instance, train_label, test_instance, test_label] = splitData(da
 
 % top train_size from each category is train
 
-cate_num = length(data);
 fea_num = size(data{1},2);
+cate_num = length(data);
 train_label = -1*ones(cate_num*train_size,1);
 train_instance = zeros(cate_num*train_size,fea_num);
 test_label = [];
 test_instance = [];
+
 
 train_pos = 0;
 test_pos = 0;
