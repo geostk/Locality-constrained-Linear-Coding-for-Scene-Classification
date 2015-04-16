@@ -1,5 +1,5 @@
 function [result] = extractFeatures(image_dir, data_dir, image_cate_use, ...
-    image_cate_size, feature_type)
+    image_cate_size, feature_type, params)
 % Extract feature from images
 % Input: image_dir - image base dir
 %        data_dir - feature output dir
@@ -8,6 +8,10 @@ function [result] = extractFeatures(image_dir, data_dir, image_cate_use, ...
 %                  if -1, use all images
 %        feature_type - 0: nonLLC 1: LLC
 % Output: features
+
+if feature_type == 1
+    data_dir = [data_dir 'LLC'];
+end
 
 image_dir_list = dir(image_dir);
 image_dir_list = image_dir_list(3:end);
@@ -19,7 +23,7 @@ end
 result = cell(length(image_cate_use));
 
 for i = 1 : length(image_cate_use)
-    cate_name = image_dir_list(i).name;
+    cate_name = image_dir_list(image_cate_use(i)).name;
     
     sub_image_dir = [image_dir '/' cate_name];
     sub_data_dir = [data_dir '/' cate_name];
@@ -38,9 +42,9 @@ for i = 1 : length(image_cate_use)
         filenames{f} = fnames(f).name;
     end
     if feature_type == 0
-        pyramid_feature = BuildPyramid(filenames,sub_image_dir,sub_data_dir);
+        pyramid_feature = BuildPyramid(filenames,sub_image_dir,sub_data_dir, params);
     else
-        pyramid_feature = BuildPyramidLLC(filenames,sub_image_dir,sub_data_dir);
+        pyramid_feature = BuildPyramidLLC(filenames,sub_image_dir,sub_data_dir,params);
     end
     result{i} = pyramid_feature;
 end

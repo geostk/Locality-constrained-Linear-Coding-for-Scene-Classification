@@ -99,7 +99,7 @@ for n = 1:niters
     errlog(n) = e;
   end
   if options(1) > 0
-    fprintf(1, 'Cycle %4d  Error %11.6f\n', n, e);
+    %fprintf(1, 'Cycle %4d  Error %11.6f\n', n, e);
   end
 
   if n > 1

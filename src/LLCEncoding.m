@@ -9,7 +9,7 @@ function [code] = LLCEncoding(X,B,K)
 D = sp_dist2(X,B);
 
 %Sort D to get nn, nearest neighbor
-[dummy nn] = sort(D, 2, 'ascend');
+[~, nn] = sort(D, 2, 'ascend');
 nn = nn(:,1:K);
 
 %codebook size
@@ -23,6 +23,7 @@ code = zeros(n,s);
 for i = 1 : n
     c = B(nn(i,:),:) - repmat(X(i,:),K,1);
     c = c*c';
+    c = c + eye(K,K)*1e-4*trace(c);
     c = c\ones(K,1);
     c = c/sum(c);
     code(i,nn(i,:)) = c';

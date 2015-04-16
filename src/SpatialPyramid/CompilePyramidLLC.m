@@ -73,7 +73,7 @@ for f = 1:length(imageFileList)
     if(mod(f,100)==0 && exist('pfig','var'))
         sp_progress_bar(pfig,4,4,f,length(imageFileList),'Compiling Pyramid:');
     end
-    outFName = fullfile(dataBaseDir, sprintf('%s_pyramid_%d_%d.mat', baseFName, params.dictionarySize, params.pyramidLevels));
+    outFName = fullfile(dataBaseDir, sprintf('%s_pyramid_%d_%d_LLC.mat', baseFName, params.dictionarySize, params.pyramidLevels));
     if(size(dir(outFName),1)~=0 && canSkip)
         %fprintf('Skipping %s\n', imageFName);
         load(outFName, 'pyramid');
@@ -105,11 +105,10 @@ for f = 1:length(imageFileList)
             y_lo = floor(hgt/binsHigh * (j-1));
             y_hi = floor(hgt/binsHigh * j);
             
-            texton_patch = texton_ind.data( (texton_ind.x > x_lo) & (texton_ind.x <= x_hi) & ...
-                                            (texton_ind.y > y_lo) & (texton_ind.y <= y_hi));
-            
+            texton_patch = texton_ind.data(((texton_ind.x > x_lo) & ...
+                (texton_ind.x <= x_hi) & (texton_ind.y > y_lo) & (texton_ind.y <= y_hi)),:);
             % make histogram of features in bin
-            pyramid_cell{1}(i,j,:) = hist(texton_patch, 1:params.dictionarySize)./length(texton_ind.data);
+            pyramid_cell{1}(i,j,:) = max(texton_patch, [], 1);
         end
     end
 
@@ -127,7 +126,6 @@ for f = 1:length(imageFileList)
                 pyramid_cell{l}(i,j,:) = ...
                 max([pyramid_cell{l-1}(2*i-1,2*j-1,:), pyramid_cell{l-1}(2*i,2*j-1,:) ...
                 pyramid_cell{l-1}(2*i-1,2*j,:) ,pyramid_cell{l-1}(2*i,2*j,:)]);
-                
             end
         end
         num_bins = num_bins/2;
@@ -149,7 +147,7 @@ for f = 1:length(imageFileList)
 
 end % f
 
-outFName = fullfile(dataBaseDir, sprintf('pyramids_all_%d_%d.mat', params.dictionarySize, params.pyramidLevels));
+outFName = fullfile(dataBaseDir, sprintf('pyramids_all_%d_%d_LLC.mat', params.dictionarySize, params.pyramidLevels));
 %save(outFName, 'pyramid_all');
 
 

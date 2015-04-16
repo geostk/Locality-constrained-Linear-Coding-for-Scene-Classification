@@ -53,6 +53,9 @@ end
 if(~isfield(params,'pyramidLevels'))
     params.pyramidLevels = 3;
 end
+if(~isfield(params,'K'))
+    params.K = 5;
+end
 if(~exist('canSkip','var'))
     canSkip = 1;
 end
