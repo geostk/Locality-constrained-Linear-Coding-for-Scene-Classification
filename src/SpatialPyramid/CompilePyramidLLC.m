@@ -1,4 +1,4 @@
-function [ pyramid_all ] = CompilePyramid( imageFileList, dataBaseDir, textonSuffix, params, canSkip, pfig )
+function [ pyramid_all ] = CompilePyramidLLC( imageFileList, dataBaseDir, textonSuffix, params, canSkip, pfig )
 %function [ pyramid_all ] = CompilePyramid( imageFileList, dataBaseDir, textonSuffix, params, canSkip )
 %
 % Generate the pyramid from the texton lablels

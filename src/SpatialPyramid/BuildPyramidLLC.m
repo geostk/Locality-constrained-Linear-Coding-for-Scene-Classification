@@ -45,7 +45,7 @@ if(~exist('params','var'))
     params.gridSpacing = 8;
     params.patchSize = 16;
     params.dictionarySize = 200;
-    params.numTextonImages = 50;
+    params.numTextonImages = 100;
     params.pyramidLevels = 3;
     params.oldSift = false;
     params.K = 5;
