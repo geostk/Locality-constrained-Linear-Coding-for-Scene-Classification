@@ -81,12 +81,32 @@ params.pyramidLevels = 3;
 <h3>
 <a id="linear-kernel" class="anchor" href="#linear-kernel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linear Kernel</h3>
 
-<p>We first built the model using linear kernel.  The features for each instance is hard-coded word. LibLinear[3] is used to train the model. The results we get is </p>
+<p>We first built the model using linear kernel.  The features for each instance is hard-coded word. LibLinear[3] is used to train the model. The results we get is 0.7267.</p>
+
+<p>Normalized Confusion Matrix</p>
+
+<p>Note that the y-axis is the true label, the x-axis is the predicted label.</p>
+
+<p><img src="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/blob/master/result/nonLLC-3-5-200.jpg?raw=true" alt=""></p>
+
+<p>Non-Normalized Confusion Matrix</p>
+
+<p><img src="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/blob/master/result/nonLLC-3-5-200-Raw.jpg?raw=true" alt=""></p>
 
 <h3>
 <a id="histogram-intersection-kernel" class="anchor" href="#histogram-intersection-kernel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Histogram Intersection Kernel</h3>
 
-<p>We also built the model using histogram intersection kernel. We first to calculate the kernel for each instance, then train the non-linear SVM model using our kernel. The results we get is </p>
+<p>We also built the model using histogram intersection kernel. We first to calculate the kernel for each instance, then train the non-linear SVM model using our kernel. The results we get is 0.8664.</p>
+
+<p>Normalized Confusion Matrix</p>
+
+<p>Note that the y-axis is the true label, the x-axis is the predicted label.</p>
+
+<p><img src="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/blob/master/result/nonLLC_kernel-3-5-200.jpg?raw=true" alt=""></p>
+
+<p>Non-Normalized Confusion Matrix</p>
+
+<p><img src="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/blob/master/result/nonLLC_kernel-3-5-200-Raw.jpg?raw=true" alt=""></p>
 
 <h3>
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h3>
@@ -250,6 +270,32 @@ liblinear.B = 1;
 </table>
 
 <p>We can see that with bias, we can improve the performance a bit.</p>
+
+<h4>
+<a id="dictionary-size" class="anchor" href="#dictionary-size" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dictionary Size</h4>
+
+<table>
+<thead>
+<tr>
+<th>Dictionary Size</th>
+<th>Mean Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>0.9892</td>
+</tr>
+<tr>
+<td>512</td>
+<td>0.9859</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>0.9859</td>
+</tr>
+</tbody>
+</table>
 
 <h2>
 <a id="reference" class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h2>
