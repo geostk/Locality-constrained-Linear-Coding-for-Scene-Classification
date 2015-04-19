@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Locality-constrained-linear-coding-for-scene-classification : ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Locality-constrained-linear-coding-for-scene-classification</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification">View on GitHub</a>
+
+          <h1 id="project_title">Locality-constrained-linear-coding-for-scene-classification</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a id="project-description" class="anchor" href="#project-description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Description</h2>
+
+<p>In this project, you will implement the LLC (Locality-constrained Linear Coding) method[2] for image classification and apply your method on a natural scene classification dataset.</p>
+
+<h2>
+<a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h2>
+
+<ol>
+<li>Extract SIFT features from each image.</li>
+<li>Build dictionary use K-means from feature vectors.</li>
+<li>Encode each feature vector via dictionary using LLC.</li>
+<li>In Spatial Pyramid Matching part, the pooled features from each sub-region are concatenated and normalized as the final image feature representation. In this paper, we use max pooling combined with sum normalization.</li>
+</ol>
+
+<h2>
+<a id="dataset" class="anchor" href="#dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>DataSet</h2>
+
+<p>The dataset we used is composed of fifteen scene categories by Svetlana Lazebnik et.al[1].  Each category has 200 to 400 images, and average image size is 300 × 250 pixels. The major sources
+of the pictures in the dataset include the COREL collection,
+personal photographs, and Google image search. </p>
+
+<h2>
+<a id="evaluation" class="anchor" href="#evaluation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Evaluation</h2>
+
+<p>When evaluate our model, we use a typical training/test split: 100 images per class for training and the rest for testing. </p>
+
+<p>We report the confusion matrix for the fifteen scenes categories as well as the mean accuracy.</p>
+
+<p>In the mean accuracy measure, we calculate the accuracy of each class, and average the accuracy values of all classes. </p>
+
+<h2>
+<a id="spatial-pyramid-matching-with-hard-coding" class="anchor" href="#spatial-pyramid-matching-with-hard-coding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spatial Pyramid Matching with Hard Coding</h2>
+
+<p>After building dictionary, for each feature vector, we assign it to its closed cluster in dictionary. In other words, each feature vector is assigned to only one cluster. Note that in this experiment, different levels of features are concatenated with different weights. For the features in level k, its weight will be 1/2^(L-k), where L is the number of levels.</p>
+
+<h3>
+<a id="parameter-setting" class="anchor" href="#parameter-setting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parameter Setting</h3>
+
+<pre><code>params.maxImageSize = 1000;
+params.gridSpacing = 8;
+params.patchSize = 16;
+params.dictionarySize = 200;
+params.numTextonImages = 100;
+params.pyramidLevels = 3;
+</code></pre>
+
+<h3>
+<a id="linear-kernel" class="anchor" href="#linear-kernel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linear Kernel</h3>
+
+<p>We first built the model using linear kernel.  The features for each instance is hard-coded word. LibLinear[3] is used to train the model. The results we get is </p>
+
+<h3>
+<a id="histogram-intersection-kernel" class="anchor" href="#histogram-intersection-kernel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Histogram Intersection Kernel</h3>
+
+<p>We also built the model using histogram intersection kernel. We first to calculate the kernel for each instance, then train the non-linear SVM model using our kernel. The results we get is </p>
+
+<h3>
+<a id="summary" class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h3>
+
+<p>Based on the results, we can see using the histogram intersection kernel does improve our classification model. But due the computation for kernel, the computation complexity is higher than the linear SVM.</p>
+
+<h2>
+<a id="locality-constrained-linear-coding" class="anchor" href="#locality-constrained-linear-coding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Locality-constrained Linear Coding</h2>
+
+<p>LLC utilizes the locality constraints to project each descriptor into its local-coordinate system, and the projected coordinates are integrated by max pooling to generate the final representation.</p>
+
+<h3>
+<a id="parameter-setting-1" class="anchor" href="#parameter-setting-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parameter Setting</h3>
+
+<pre><code>params.maxImageSize = 1000;
+params.gridSpacing = 8;
+params.patchSize = 16;
+params.dictionarySize = 1024;
+params.numTextonImages = 100;
+params.pyramidLevels = 3;
+params.K = 5;
+liblinear.solver = 4;
+liblinear.C = 32;
+liblinear.B = 1;
+</code></pre>
+
+<h3>
+<a id="result" class="anchor" href="#result" aria-hidden="true"><span class="octicon octicon-link"></span></a>Result</h3>
+
+<p>The mean accuracy we got is 98.57%.</p>
+
+<p>Normalized Confusion Matrix</p>
+
+<p>Note that the y-axis is the true label, the x-axis is the predicted label.</p>
+
+<p><img src="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/blob/master/result/LLC-3-5-1024.jpg?raw=true" alt="Confusion Matrix"></p>
+
+<p>Non-Normalized Confusion Matrix</p>
+
+<p><img src="https://github.com/wwu137/Locality-constrained-Linear-Coding-for-Scene-Classification/blob/master/result/LLC-3-5-1024-Raw.jpg?raw=true" alt=""></p>
+
+<h3>
+<a id="different-parameter-settings" class="anchor" href="#different-parameter-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Different Parameter Settings</h3>
+
+<h4>
+<a id="vary-solver" class="anchor" href="#vary-solver" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vary Solver</h4>
+
+<p>First, we tried eight different solvers in liblinear.</p>
+
+<table>
+<thead>
+<tr>
+<th>Solver</th>
+<th>Mean Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L2-regularized logistic regression (primal)</td>
+<td>0.9590</td>
+</tr>
+<tr>
+<td>L2-regularized L2-loss support vector classification (dual)</td>
+<td>0.9786</td>
+</tr>
+<tr>
+<td>L2-regularized L2-loss support vector classification (primal)</td>
+<td>0.9790</td>
+</tr>
+<tr>
+<td>L2-regularized L1-loss support vector classification (dual)</td>
+<td>0.9730</td>
+</tr>
+<tr>
+<td>support vector classification by Crammer and Singer</td>
+<td>0.9819</td>
+</tr>
+<tr>
+<td>L1-regularized L2-loss support vector classification</td>
+<td>0.9013</td>
+</tr>
+<tr>
+<td>L1-regularized logistic regression</td>
+<td>0.7865</td>
+</tr>
+<tr>
+<td>L2-regularized logistic regression (dual)</td>
+<td>0.9590</td>
+</tr>
+</tbody>
+</table>
+
+<h4>
+<a id="vary-cost" class="anchor" href="#vary-cost" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vary Cost</h4>
+
+<p>We use the default solver: L2-regularized L2-loss support vector classification but with different cost. The results are</p>
+
+<table>
+<thead>
+<tr>
+<th>C</th>
+<th>Mean Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32</td>
+<td>0.9837</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.9826</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.9813</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.9786</td>
+</tr>
+<tr>
+<td>1/2</td>
+<td>0.9760</td>
+</tr>
+<tr>
+<td>1/4</td>
+<td>0.9710</td>
+</tr>
+<tr>
+<td>1/32</td>
+<td>0.9543</td>
+</tr>
+</tbody>
+</table>
+
+<p>We can see that with larger cost, the mean accuracy will increase.</p>
+
+<h4>
+<a id="bias" class="anchor" href="#bias" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bias</h4>
+
+<p>We use the default solver and set Cost to be 1, we test the model with and without bias.</p>
+
+<table>
+<thead>
+<tr>
+<th>Bisa</th>
+<th>Mean Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>With Bias</td>
+<td>0.9799</td>
+</tr>
+<tr>
+<td>Without Bias</td>
+<td>0.9786</td>
+</tr>
+</tbody>
+</table>
+
+<p>We can see that with bias, we can improve the performance a bit.</p>
+
+<h2>
+<a id="reference" class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h2>
+
+<ol>
+<li>Lazebnik, S., Schmid, C., &amp; Ponce, J. (2006). <em>Beyond bags of features: Spatial pyramid matching for recognizing natural scene categories</em>. In Computer Vision and Pattern Recognition, 2006 IEEE Computer Society Conference on (Vol. 2, pp. 2169-2178). IEEE.</li>
+<li>Wang, J., Yang, J., Yu, K., Lv, F., Huang, T., &amp; Gong, Y. (2010, June). <em>Locality-constrained linear coding for image classification</em>. In Computer Vision and Pattern Recognition (CVPR), 2010 IEEE Conference on (pp. 3360-3367). IEEE.</li>
+<li>Fan, R. E., Chang, K. W., Hsieh, C. J., Wang, X. R., &amp; Lin, C. J. (2008). <em>LIBLINEAR: A library for large linear classification</em>. The Journal of Machine Learning Research, 9, 1871-1874.</li>
+</ol>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Locality-constrained-linear-coding-for-scene-classification maintained by <a href="https://github.com/wwu137">wwu137</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
