@@ -68,8 +68,15 @@ if(params.numTextonImages > length(imageFileList))
     params.numTextonImages = length(imageFileList);
 end
 
-outFName = fullfile(fileparts(dataBaseDir), sprintf('dictionary_%d.mat', params.dictionarySize));
+%check parent fold
+outParentFName = fullfile(fileparts(dataBaseDir), sprintf('dictionary_%d.mat', params.dictionarySize));
+if(exist(outParentFName,'file')~=0 && canSkip)
+    fprintf('Dictionary file %s already exists.\n', outParentFName);
+    return;
+end
 
+%check current folder
+outFName = fullfile(dataBaseDir, sprintf('dictionary_%d.mat', params.dictionarySize));
 if(exist(outFName,'file')~=0 && canSkip)
     fprintf('Dictionary file %s already exists.\n', outFName);
     return;
@@ -78,7 +85,7 @@ end
 
 %% load file list and determine indices of training images
 
-inFName = fullfile(dataBaseDir, 'f_order.txt');
+inFName = fullfile(fileparts(dataBaseDir), 'f_order.txt');
 if ~isempty(dir(inFName))
     R = load(inFName, '-ascii');
     if(size(R,2)~=length(imageFileList))
