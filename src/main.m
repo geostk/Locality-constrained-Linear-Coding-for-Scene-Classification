@@ -27,7 +27,9 @@ params.numTextonImages = train_size;
 params.canSkip = 1;
 
 %Extract features
-[image_data, train_indices] = extractFeatures(image_dir, data_dir, image_cate_use, image_size, feature_type, params, train_indice_file);
+[image_data, train_indices, cate_names] = extractFeatures(image_dir, data_dir, image_cate_use, image_size, feature_type, params, train_indice_file);
+
+cate_names = cate_names(:,1);
 
 [train_instance, train_label, test_instance, test_label] = splitData(image_data, train_size, train_indices);
 

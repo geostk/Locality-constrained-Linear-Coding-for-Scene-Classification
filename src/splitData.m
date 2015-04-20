@@ -21,13 +21,13 @@ test_instance = [];
 for i = 1 : cate_num
     cate_data = data{i};
     all_indices = [1:size(cate_data,1)];
-    is_train = ismember(all_indices,train_indices);
+    is_train = ismember(all_indices,train_indices{i});
     
     train_label = [train_label; i*ones(train_size,1)];
     train_instance = [train_instance; cate_data(is_train == 1,:)];
     
     test_label = [test_label; i*ones(size(cate_data,1)-train_size,1)];
-    test_instance = [test_instance; cate_data(is_trian == 0,:)];
+    test_instance = [test_instance; cate_data(is_train == 0,:)];
 end
 
 end
