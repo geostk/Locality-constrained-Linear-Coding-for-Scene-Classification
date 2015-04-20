@@ -43,6 +43,9 @@ function calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size
             GenerateSiftDescriptors(filenames, sub_image_dir, sub_data_dir, params, canSkip, pfig);
         end
         close(pfig);
+%         if(saveSift)
+%             GenerateSiftDescriptors(filenames, sub_image_dir, sub_data_dir, params, canSkip);
+%         end
     end
     
     % check if the dictionary has been generated
