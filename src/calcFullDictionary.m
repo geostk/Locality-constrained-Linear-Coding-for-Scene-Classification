@@ -1,6 +1,12 @@
 function calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size, ...
     feature_type, params, train_indice_file)
 
+    if(~isfield(params,'oldSift'))
+        params.oldSift = false;
+    end
+    if(~isfield(params,'K'))
+        params.K = 5;
+    end
     if(~exist('canSkip','var'))
         canSkip = 1;
     end
@@ -43,7 +49,7 @@ function calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size
     cate_name = image_dir_list(image_cate_use(1)).name;
     check_sub_data_dir = [data_dir '/' cate_name];
     
-    checkDirName = fullfile(check_sub_data_dir, sprintf('dictionary_%d.mat', params.dictionarySize));
+    checkDirName = fullfile(data_dir, sprintf('dictionary_%d.mat', params.dictionarySize));
     if(exist(checkDirName,'file')~=0)
         fprintf('Dictionary file %s already exists.\n', checkDirName);
         return;
@@ -52,9 +58,7 @@ function calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size
     totalR = [];
     
     [pathstr, name, ext] = fileparts(data_dir);
-    pathstr
     checkfileOrder = fullfile(pathstr, 'f_order.txt');
-    asdf
     if(exist(checkfileOrder,'file')~=0)
         totalR = load(checkfileOrder, '-ascii');
         fprintf('total file order for dic exists.\n');

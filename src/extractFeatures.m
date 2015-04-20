@@ -24,6 +24,7 @@ train_indices = cell(length(image_cate_use));
 
 calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size, feature_type, params, train_indice_file);
 
+temp_indices = importdata([fileparts(data_dir),'/', train_indice_file]);
 for i = 1 : length(image_cate_use)
     cate_name = image_dir_list(image_cate_use(i)).name;
     
@@ -51,6 +52,6 @@ for i = 1 : length(image_cate_use)
     result{i} = pyramid_feature;  
     
     %read training indices
-    temp_indices = importdata(strcat(strcat(sub_data_dir, '/'), train_indice_file));
-    train_indices{i} = temp_indices(1:params.numTextonImages);
+    train_indices{i} = temp_indices(((i-1)*params.numTextonImages + 1) : i*params.numTextonImages);
+    train_indices{i}(1:10)
 end
