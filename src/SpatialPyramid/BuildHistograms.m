@@ -58,7 +58,8 @@ if(~exist('canSkip','var'))
 end
 %% load texton dictionary (all texton centers)
 
-inFName = fullfile(dataBaseDir, sprintf('dictionary_%d.mat', params.dictionarySize));
+[pathstr, name, ext] = fileparts(dataBaseDir);
+inFName = fullfile(pathstr, sprintf('dictionary_%d.mat', params.dictionarySize));
 load(inFName,'dictionary');
 fprintf('Loaded texton dictionary: %d textons\n', params.dictionarySize);
 

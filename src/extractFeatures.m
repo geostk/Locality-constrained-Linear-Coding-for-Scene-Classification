@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 function [result, train_indices, cate_names] = extractFeatures(image_dir, data_dir, image_cate_use, ...
-=======
-function [result, train_indices, names] = extractFeatures(image_dir, data_dir, image_cate_use, ...
->>>>>>> f78ca5aff87104c5792e10ebb3123b99bf8e3c5c
     image_cate_size, feature_type, params, train_indice_file)
 % Extract feature from images
 % Input: image_dir - image base dir
