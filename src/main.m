@@ -10,17 +10,17 @@ train_indice_file = 'f_order.txt';
 
 %empty to use all cates
 %image_cate_use = [1,2,3];
-image_cate_use = [1:15];
+image_cate_use = [];
 %-1 : use all images
 image_size = -1;
 
-params.dictionarySize = 1024;
+params.dictionarySize = 200;
 params.K = 5;
 params.pyramidLevels = 3;
 params.pfig = 0;
 
 % feature_type = 0, nonLLC; 1, LLC.
-feature_type = 1;
+feature_type = 0;
 
 train_size = 100;
 params.numTextonImages = train_size;

@@ -1,4 +1,4 @@
-function [result, train_indices] = extractFeatures(image_dir, data_dir, image_cate_use, ...
+function [result, train_indices, names] = extractFeatures(image_dir, data_dir, image_cate_use, ...
     image_cate_size, feature_type, params, train_indice_file)
 % Extract feature from images
 % Input: image_dir - image base dir
@@ -25,9 +25,10 @@ train_indices = cell(length(image_cate_use));
 calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size, feature_type, params, train_indice_file);
 
 temp_indices = importdata([fileparts(data_dir),'/', train_indice_file]);
+cate_names = cell(length(image_cate_use));
 for i = 1 : length(image_cate_use)
     cate_name = image_dir_list(image_cate_use(i)).name;
-    
+    cate_names{i} = cate_name;
     sub_image_dir = [image_dir '/' cate_name];
     sub_data_dir = [data_dir '/' cate_name];
     
