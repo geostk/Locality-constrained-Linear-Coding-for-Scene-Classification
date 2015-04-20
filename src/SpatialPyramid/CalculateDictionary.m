@@ -35,8 +35,8 @@ if(~exist('params','var'))
     params.maxImageSize = 1000;
     params.gridSpacing = 8;
     params.patchSize = 16;
-    params.dictionarySize = 200;
-    params.numTextonImages = 50;
+    params.dictionarySize = 1024;
+    params.numTextonImages = 100;
     params.pyramidLevels = 3;
 end
 if(~isfield(params,'maxImageSize'))
@@ -49,16 +49,19 @@ if(~isfield(params,'patchSize'))
     params.patchSize = 16;
 end
 if(~isfield(params,'dictionarySize'))
-    params.dictionarySize = 200;
+    params.dictionarySize = 1024;
 end
 if(~isfield(params,'numTextonImages'))
-    params.numTextonImages = 50;
+    params.numTextonImages = 100;
 end
 if(~isfield(params,'pyramidLevels'))
     params.pyramidLevels = 3;
 end
 if(~exist('canSkip','var'))
     canSkip = 1;
+end
+if(~isfield(params,'K'))
+    params.K = 5;
 end
 
 if(params.numTextonImages > length(imageFileList))
@@ -101,7 +104,7 @@ end
 
 for f = 1:params.numTextonImages    
     
-    imageFName = imageFileList{training_indices(f)};
+    imageFName = imageFileList{f};
     [dirN base] = fileparts(imageFName);
     baseFName = fullfile(dirN, base);
     inFName = fullfile(dataBaseDir, sprintf('%s%s', baseFName, featureSuffix));

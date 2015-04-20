@@ -21,11 +21,11 @@ function [ pyramid_all ] = CompilePyramidLLC( imageFileList, dataBaseDir, texton
 % canSkip: if true the calculation will be skipped if the appropriate data 
 %  file is found in dataBaseDir. This is very useful if you just want to
 %  update some of the data or if you've added new images.
-
+ 
 fprintf('Building Spatial Pyramid\n\n');
-
+ 
 %% parameters
-
+ 
 if(~exist('params','var'))
     params.maxImageSize = 1000;
     params.gridSpacing = 8;
@@ -55,16 +55,16 @@ end
 if(~exist('canSkip','var'))
     canSkip = 1;
 end
-
+ 
 binsHigh = 2^(params.pyramidLevels-1);
-
+ 
 if(exist('pfig','var'))
     %tic;
 end
 pyramid_all = zeros(length(imageFileList),params.dictionarySize*sum((2.^(0:(params.pyramidLevels-1))).^2));
 for f = 1:length(imageFileList)
-
-
+ 
+ 
     %% load image
     imageFName = imageFileList{f};
     [dirN base] = fileparts(imageFName);
@@ -88,17 +88,17 @@ for f = 1:length(imageFileList)
     %% get width and height of input image
     wid = texton_ind.wid;
     hgt = texton_ind.hgt;
-
+ 
     %fprintf('Loaded %s: wid %d, hgt %d\n', imageFName, wid, hgt);
     sp_progress_bar(pfig,4,4,f,length(imageFileList),'Compiling Pyramid:');
     
     %% compute histogram at the finest level
     pyramid_cell = cell(params.pyramidLevels,1);
     pyramid_cell{1} = zeros(binsHigh, binsHigh, params.dictionarySize);
-
+ 
     for i=1:binsHigh
         for j=1:binsHigh
-
+ 
             % find the coordinates of the current bin
             x_lo = floor(wid/binsHigh * (i-1));
             x_hi = floor(wid/binsHigh * i);
@@ -111,7 +111,7 @@ for f = 1:length(imageFileList)
             pyramid_cell{1}(i,j,:) = max(texton_patch, [], 1);
         end
     end
-
+ 
     %% compute histograms at the coarser levels
     num_bins = binsHigh/2;
     for l = 2:params.pyramidLevels
@@ -130,7 +130,7 @@ for f = 1:length(imageFileList)
         end
         num_bins = num_bins/2;
     end
-
+ 
     %% stack all the histograms with appropriate weights 1
     pyramid = [];
     for l = 1:params.pyramidLevels-1
@@ -142,13 +142,13 @@ for f = 1:length(imageFileList)
     % save pyramid
     sp_make_dir(outFName);
     save(outFName, 'pyramid');
-
+ 
     pyramid_all(f,:) = pyramid;
-
+ 
 end % f
-
+ 
 outFName = fullfile(dataBaseDir, sprintf('pyramids_all_%d_%d_LLC.mat', params.dictionarySize, params.pyramidLevels));
 %save(outFName, 'pyramid_all');
-
-
+ 
+ 
 end

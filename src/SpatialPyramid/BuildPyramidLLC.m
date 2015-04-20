@@ -1,4 +1,4 @@
-function [ pyramid_all ] = BuildPyramid( imageFileList, imageBaseDir, dataBaseDir, params, canSkip, saveSift )
+function [ pyramid_all ] = BuildPyramidLLC( imageFileList, imageBaseDir, dataBaseDir, params )
 %function [ pyramid_all ] = BuildPyramid( imageFileList, imageBaseDir, dataBaseDir, params, canSkip )
 %
 %Complete all steps necessary to build a spatial pyramid based
@@ -83,14 +83,21 @@ if(~exist('saveSift','var'))
     saveSift = 1;
 end
 
+%% build the pyramid with progress figure
 pfig = sp_progress_bar('Building Spatial Pyramid');
-params
-%% build the pyramid
 if(saveSift)
-    GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip,pfig);
+    GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip, pfig);
 end
-CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip,pfig);
-BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip,pfig);
-pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip,pfig);
+CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip, pfig);
+BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip, pfig);
+pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip, pfig);
 close(pfig);
+
+%% build the pyramid without progress figure
+% if(saveSift)
+%     GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip);
+% end
+% CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip);
+% BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip);
+% pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip);
 end

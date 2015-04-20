@@ -1,4 +1,4 @@
-function [ H_all ] = BuildHistograms( imageFileList,imageBaseDir, dataBaseDir, featureSuffix, params, canSkip, pfig )
+function [ H_all ] = BuildHistogramsLLC( imageFileList,imageBaseDir, dataBaseDir, featureSuffix, params, canSkip, pfig )
 %function [ H_all ] = BuildHistograms( imageFileList, dataBaseDir, featureSuffix, params, canSkip )
 %
 %find texton labels of patches and compute texton histograms of all images
@@ -61,7 +61,8 @@ if(~exist('canSkip','var'))
 end
 %% load texton dictionary (all texton centers)
 
-inFName = fullfile(dataBaseDir, sprintf('dictionary_%d.mat', params.dictionarySize));
+[pathstr, name, ext] = fileparts(dataBaseDir);
+inFName = fullfile(pathstr, sprintf('dictionary_%d.mat', params.dictionarySize));
 load(inFName,'dictionary');
 fprintf('Loaded texton dictionary: %d textons\n', params.dictionarySize);
 
@@ -109,15 +110,69 @@ for f = 1:length(imageFileList)
     texton_ind.hgt = features.hgt;
     %run in batches to keep the memory foot print small
     batchSize = 100000;
+    NEAREST_NEIGHBORS = params.K;
     if ndata <= batchSize
         %dist_mat = sp_dist2(features.data, dictionary);
         %[min_dist, min_ind] = min(dist_mat, [], 2);
         %texton_ind.data = min_ind;
         texton_ind.data = LLCEncoding(features.data, dictionary, params.K);
+%         dist_mat = sp_dist2(features.data, dictionary);
+%         [sortedMat, indexes] = sort(dist_mat, 2);
+%         nearestDistances = sortedMat(:,1:NEAREST_NEIGHBORS);
+%         nearestDistances = normr(nearestDistances);
+%         nearestDistances = nearestDistances.^2;
+%         numDescriptors = size(dist_mat,1);
+%         countForClusters = zeros(params.dictionarySize, 1);
+%         for row = 1:numDescriptors
+%             for column = 1:NEAREST_NEIGHBORS
+%                 countCurrCluster = nearestDistances(row,column);
+%                 clusterNum = indexes(row, column);
+%                 countForClusters(clusterNum, 1) = countForClusters(clusterNum, 1) + countCurrCluster;
+%             end
+%         end
+%         countForClusters = ceil(countForClusters);
+%         totalCount = sum(countForClusters(:));
+%         histMatrix = zeros(totalCount, 1);
+%         counter = 1;
+%         for i = 1:size(countForClusters, 1)
+%             countOfCluster_i = countForClusters(i, 1);
+%             for j = 1:countOfCluster_i
+%                histMatrix(counter, 1) = i;
+%                counter = counter + 1; 
+%             end
+%         end
+%         texton_ind.data = histMatrix;
     else
         for j = 1:batchSize:ndata
             lo = j;
             hi = min(j+batchSize-1,ndata);
+%             dist_mat = sp_dist2(features.data(lo:hi,:), dictionary);
+%             [sortedMat, indexes] = sortrows(dist_mat);
+%             nearestDistances = sortedMat(:,1:NEAREST_NEIGHBORS);
+%             nearestDistances = normr(nearestDistances);
+%             nearestDistances = nearestDistances.^2;
+%             numDescriptors = size(dist_mat,1);
+%             countForClusters = zeros(params.dictionarySize, 1);
+%             for row = 1:numDescriptors
+%                 for column = 1:NEAREST_NEIGHBORS
+%                     countCurrCluster = nearestDistances(row,column);
+%                     clusterNum = indexes(row, column);
+%                     countForClusters(clusterNum, 1) = countForClusters(clusterNum, 1) + countCurrCluster;
+%                 end
+%             end
+%             countForClusters = ceil(countForClusters);
+%             totalCount = sum(countForClusters(:));
+%             histMatrix = zeros(totalCount, 1);
+%             counter = 1;
+%             for i = 1:size(countForClusters, 1)
+%                 countOfCluster_i = countForClusters(i, 1);
+%                 for q = 1:countOfCluster_i
+%                     histMatrix(counter, 1) = i;
+%                     counter = counter + 1;
+%                 end
+%             end
+%             texton_ind.data(lo:hi,:) = histMatrix;
+
             %dist_mat = sp_dist2(features.data(lo:hi,:), dictionary);
             %[min_dist, min_ind] = min(dist_mat, [], 2);
             %texton_ind.data(lo:hi,:) = min_ind;

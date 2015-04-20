@@ -1,5 +1,5 @@
-function [result] = extractFeatures(image_dir, data_dir, image_cate_use, ...
-    image_cate_size, feature_type, params)
+function [result, train_indices] = extractFeatures(image_dir, data_dir, image_cate_use, ...
+    image_cate_size, feature_type, params, train_indice_file)
 % Extract feature from images
 % Input: image_dir - image base dir
 %        data_dir - feature output dir
@@ -8,7 +8,6 @@ function [result] = extractFeatures(image_dir, data_dir, image_cate_use, ...
 %                  if -1, use all images
 %        feature_type - 0: nonLLC 1: LLC
 % Output: features
-
 if feature_type == 1
     data_dir = [data_dir 'LLC'];
 end
@@ -21,6 +20,9 @@ if isempty(image_cate_use)
 end
 
 result = cell(length(image_cate_use));
+train_indices = cell(length(image_cate_use));
+
+calcFullDictionary(image_dir, data_dir, image_cate_use, image_cate_size, feature_type, params, train_indice_file);
 
 for i = 1 : length(image_cate_use)
     cate_name = image_dir_list(image_cate_use(i)).name;
@@ -46,5 +48,9 @@ for i = 1 : length(image_cate_use)
     else
         pyramid_feature = BuildPyramidLLC(filenames,sub_image_dir,sub_data_dir,params);
     end
-    result{i} = pyramid_feature;
+    result{i} = pyramid_feature;  
+    
+    %read training indices
+    temp_indices = importdata(strcat(strcat(sub_data_dir, '/'), train_indice_file));
+    train_indices{i} = temp_indices(1:params.numTextonImages);
 end
