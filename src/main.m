@@ -20,7 +20,7 @@ params.pyramidLevels = 3;
 params.pfig = 0;
 
 % feature_type = 0, nonLLC; 1, LLC.
-feature_type = 0;
+feature_type = 1;
 
 train_size = 100;
 params.numTextonImages = train_size;
