@@ -84,20 +84,20 @@ if(~exist('saveSift','var'))
 end
 
 %% build the pyramid with progress figure
-% pfig = sp_progress_bar('Building Spatial Pyramid');
-% if(saveSift)
-%     GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip, pfig);
-% end
-% CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip, pfig);
-% BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip, pfig);
-% pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip, pfig);
-% close(pfig);
-
-%% build the pyramid without progress figure
+pfig = sp_progress_bar('Building Spatial Pyramid');
 if(saveSift)
-    GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip);
+    GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip, pfig);
 end
-CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip);
-BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip);
-pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip);
+CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip, pfig);
+BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip, pfig);
+pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip, pfig);
+close(pfig);
+
+% %% build the pyramid without progress figure
+% if(saveSift)
+%     GenerateSiftDescriptors( imageFileList,imageBaseDir,dataBaseDir,params,canSkip);
+% end
+% CalculateDictionary(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip,pfig);
+% BuildHistogramsLLC(imageFileList,imageBaseDir,dataBaseDir,'_sift.mat',params,canSkip,pfig);
+% pyramid_all = CompilePyramidLLC(imageFileList,dataBaseDir,sprintf('_texton_ind_%d_LLC.mat',params.dictionarySize),params,canSkip,pfig);
 end

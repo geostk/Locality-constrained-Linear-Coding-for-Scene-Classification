@@ -33,7 +33,7 @@ cate_names = cate_names(:,1);
 
 [train_instance, train_label, test_instance, test_label] = splitData(image_data, train_size, train_indices);
 
-options='-s 3 -c 100 -B 1';
+options='-s 3 -c 10 -B 1';
 %options='-s 0 -t 2';
 
 train_instance_sparse = sparse(train_instance);
